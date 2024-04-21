@@ -11,6 +11,7 @@ namespace Develop02.Assets
         public PromptGenerator()
         {
             _usedPromptIndex = new List<int>();
+            _prompts = new List<string>();
 
             _prompts.Add("What was the most interesting person I interacted with today?");
             _prompts.Add("What was the best part of my day?");
