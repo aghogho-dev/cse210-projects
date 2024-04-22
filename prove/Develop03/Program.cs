@@ -16,6 +16,7 @@ class Program
         // Console.WriteLine(text);
 
         Scripture script = new Scripture(refOne);
+        
 
     }
 }
