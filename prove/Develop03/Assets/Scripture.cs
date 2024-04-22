@@ -5,7 +5,7 @@ namespace Develop03.Assets;
 class Scripture 
 {
     private Reference _reference;
-    private List<Word> _words;
+    private List<Word> _words = new List<Word>();
 
     public Scripture(Reference reference)
     {
@@ -27,7 +27,7 @@ class Scripture
 
         foreach (Word oneWord in _words)
         {
-            if (oneWord.IsHidden()) notHidden += 1;
+            if (!oneWord.IsHidden()) notHidden += 1;
         }
 
         numberToHide = Math.Min(numberToHide, notHidden);
