@@ -19,7 +19,7 @@ class Scripture
         }
     }
 
-    public void HideRandomWords(int numberToHide)
+    public void HideRandomWords(int numberToHide = 3)
     {
         Random random = new Random();
 
