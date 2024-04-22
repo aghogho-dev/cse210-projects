@@ -31,6 +31,7 @@ namespace Develop02.Assets
                     outFile.WriteLine($"{entry._date}~|~{entry._promptText}~|~{entry._entryText}");
                 }
             }
+            Console.WriteLine($"Saved to {fileName} successfully");
         }
 
         public void LoadFromFile(string fileName)
@@ -54,7 +55,47 @@ namespace Develop02.Assets
 
                 AddEntry(newEntry);
             }
+            Console.WriteLine($"Loaded from {fileName} successfully");
 
+        }
+
+        public void DeleteFile(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+                Console.WriteLine($"{fileName} deleted successfully");
+            }
+            else Console.WriteLine($"{fileName} does not exists");
+        }
+
+        private string QuoteAndEscape(string field)
+        {
+            if (field.Contains("\"") || field.Contains(","))
+            {
+                string escapeField = field.Replace("\"", "\"\"");
+                
+                return $"\"{escapeField}\"";
+            }
+            return field;
+        }
+
+        public void SaveToCSV(string fileName)
+        {
+            using (StreamWriter outFile = new StreamWriter(fileName))
+            {
+                foreach (Entry entry in _entries)
+                {
+                    string date = QuoteAndEscape(entry._date);
+                    string prompt = QuoteAndEscape(entry._promptText);
+                    string entry_ = QuoteAndEscape(entry._entryText);
+
+                    string line = $"{date},{prompt},{entry_}";
+
+                    outFile.WriteLine(line);
+                }
+            }
+            Console.WriteLine($"Saved to {fileName} successfully");
         }
     }
 }

@@ -12,7 +12,7 @@ class Program
         while (true)
         {
             Console.WriteLine("Please select one of the following choices:");
-            Console.WriteLine("1. Write\n2. Display\n3. Load\n4. Save\n5. Quit");
+            Console.WriteLine("1. Write\n2. Display\n3. Load\n4. Save\n5. Quit\n6. Delete File\n7. Export CSV");
             Console.Write("What do you want to do? ");
             
             string toDo = Console.ReadLine();
@@ -53,6 +53,20 @@ class Program
             else if (toDo == "5") 
             {
                 break;
+            }
+            else if (toDo == "6")
+            {
+                Console.Write("What is the filename to delete? ");
+                string fileName = Console.ReadLine();
+
+                journal.DeleteFile(fileName);
+            }
+            else if (toDo == "7")
+            {
+                Console.Write("What is the CSV name: ");
+                string fileName = Console.ReadLine();
+
+                journal.SaveToCSV(fileName);
             }
         }
     }
