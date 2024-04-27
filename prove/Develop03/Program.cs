@@ -14,10 +14,22 @@ class Program
         int fromVerse = int.Parse(Console.ReadLine());
         Console.Write("What is the name of the ToVerse (Press Enter if no ToVerse)? [For John 3:16-19, the Chapter is `19`] ");
         string ToVerseString = Console.ReadLine();
-        int ToVerseInt = (int.TryParse(ToVerseString, out int _)) ?  int.Parse(ToVerseString) : -99;
-        
+        int ToVerseInt = (int.TryParse(ToVerseString, out int _)) ? int.Parse(ToVerseString) : -99;
+        Console.Write("Do you want to supply the text or use the Bible API? [text/api] ");
+        string useText = Console.ReadLine();
+
+        string provideText = "";
+
+        if (useText.Trim().ToLower() == "text")
+        {
+            Console.WriteLine("Provide the text: ");
+            provideText = Console.ReadLine();
+        }
+
+
         Reference refOne = (ToVerseInt != -99) ? new Reference(book, chapter, fromVerse, ToVerseInt) : new Reference(book, chapter, fromVerse);
-        Scripture script = new Scripture(refOne);
+        Scripture script = (useText.Trim().ToLower() == "api" && provideText == "") ?
+                    new Scripture(refOne) : new Scripture(refOne, provideText);
 
         string continuePlay;
 
@@ -25,12 +37,11 @@ class Program
 
         while (!script.IsCompletelyHidden())
         {
-            Console.WriteLine();
 
             string toDisplay = $"\n{book} {chapter}:{fromVerse}";
 
             if (ToVerseInt != -99) toDisplay += $"-{ToVerseInt}";
-            
+
             Console.WriteLine($"{toDisplay} {script.GetDisplayText()}");
 
             Console.Write("\nPress enter to continue or type quit to finish:\n");
@@ -48,11 +59,12 @@ class Program
 
                 script.HideRandomWords(numberToHide);
 
-                Console.Clear();
             }
             else if (continuePlay == "quit") break;
+
+            Console.Clear();
         }
-        
+
     }
 }
 

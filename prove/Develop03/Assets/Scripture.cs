@@ -6,11 +6,24 @@ class Scripture
 {
     private Reference _reference;
     private List<Word> _words = new List<Word>();
+    private string[] splitString;
 
     public Scripture(Reference reference)
     {
         _reference = reference;
-        string[] splitString = _reference.GetDisplayText().Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        splitString = _reference.GetDisplayText().Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (string oneString in splitString)
+        {
+            Word word = new Word(oneString);
+            _words.Add(word);
+        }
+    }
+
+    public Scripture(Reference reference, string text)
+    {
+        _reference = reference;
+        splitString = text.Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
         
         foreach (string oneString in splitString)
         {
