@@ -15,8 +15,7 @@ class Scripture
         
         foreach (string oneString in splitString)
         {
-            Word word = new Word(oneString);
-            _words.Add(word);
+            _words.Add(new Word(oneString));
         }
     }
 
@@ -27,8 +26,7 @@ class Scripture
         
         foreach (string oneString in splitString)
         {
-            Word word = new Word(oneString);
-            _words.Add(word);
+            _words.Add(new Word(oneString));
         }
     }
 
