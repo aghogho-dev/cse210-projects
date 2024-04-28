@@ -6,14 +6,14 @@ class Scripture
 {
     private Reference _reference;
     private List<Word> _words = new List<Word>();
-    private string[] splitString;
+    private string[] _splitString;
 
     public Scripture(Reference reference)
     {
         _reference = reference;
-        splitString = _reference.GetDisplayText().Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        _splitString = _reference.GetDisplayText().Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
         
-        foreach (string oneString in splitString)
+        foreach (string oneString in _splitString)
         {
             _words.Add(new Word(oneString));
         }
@@ -22,9 +22,9 @@ class Scripture
     public Scripture(Reference reference, string text)
     {
         _reference = reference;
-        splitString = text.Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        _splitString = text.Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
         
-        foreach (string oneString in splitString)
+        foreach (string oneString in _splitString)
         {
             _words.Add(new Word(oneString));
         }
