@@ -3,15 +3,30 @@ using Develop04.Assets;
 class Program
 {
     static void Main(string[] args)
-    {
-        int choice = menu();
-
-        if (choice == 1)
+    {    
+        while (true)
         {
-            BreathingActivity breathe = new BreathingActivity();
-            breathe.Run();
-        }
-        
+            int choice = menu();
+
+            if (choice == 1)
+            {
+                BreathingActivity breathe = new BreathingActivity();
+                breathe.Run();
+            }
+            else if (choice == 2)
+            {
+                ReflectingActivity reflect = new ReflectingActivity();
+                reflect.Run();
+            }
+            else if (choice == 3)
+            {
+
+            }
+            else if (choice == 4)
+            {
+                break;
+            }
+        }        
     }
 
     static public int menu()
