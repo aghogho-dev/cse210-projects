@@ -203,15 +203,7 @@ public class GoalManager
 
             foreach (Goal goal in _goals)
             {
-                string goalName = goal.GetGoalName();
-
-                string write = $"{goalName},{goal.IsComplete()},{goal.GetShortName()},{goal.GetDescription()},{goal.GetPoints()}";
-
-                if (goalName == "ChecklistGoal")
-                {
-                    ChecklistGoal checkGoal = (ChecklistGoal)goal;
-                    write += $",{checkGoal.GetTarget()},{checkGoal.GetBonus()},{checkGoal.GetTimesDone()}";
-                }
+                string write = goal.GetStringRepresentation();
 
                 outputFile.WriteLine(write);
             }    

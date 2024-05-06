@@ -9,6 +9,7 @@ public class ChecklistGoal : Goal
     private int _bonus;
     private bool _isComplete;
     private int _timesDone = 0;
+    
     public ChecklistGoal(string name, string description, int points, int target, int bonus) : base(name, description, points)
     {
         _target = target;
@@ -81,6 +82,11 @@ public class ChecklistGoal : Goal
     public void SetIsComplete(bool isComplete)
     {
         _isComplete = isComplete;
+    }
+
+    public override string GetStringRepresentation()
+    {
+        return $"{GetGoalName()},{IsComplete()},{GetShortName()},{GetDescription()},{GetPoints()},{GetTarget()},{GetBonus()},{GetTimesDone()}";
     }
 
 }

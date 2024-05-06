@@ -54,7 +54,7 @@ public class Goal
 
     public virtual string GetStringRepresentation()
     {
-        return "";
+        return $"{GetGoalName()},{IsComplete()},{GetShortName()},{GetDescription()},{GetPoints()}";
     }
 
     public string GetGoalName()

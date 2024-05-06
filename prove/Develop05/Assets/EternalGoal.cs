@@ -6,6 +6,7 @@ public class EternalGoal : Goal
 {
     private bool _isComplete;
     private int _timesDone = 0;
+    
     public EternalGoal(string name, string description, int points) : base(name, description, points)
     {
         _isComplete = false;
