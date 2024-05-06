@@ -1,7 +1,7 @@
 using System;
-using System.Runtime;
-using System.Runtime.CompilerServices;
-using System.Xml;
+using System.Linq;
+using System.IO;
+using System.Threading.Tasks.Dataflow;
 
 namespace Develop05.Assets;
 
@@ -9,11 +9,13 @@ public class GoalManager
 {
     private List<Goal> _goals;
     private int _score;
+    private List<Goal> _notCompleted; 
 
     public GoalManager()
     {
         _goals = new List<Goal>();
         _score = 0;
+        _notCompleted = new List<Goal>();
     }
 
     public void Start()
@@ -22,7 +24,7 @@ public class GoalManager
         {
             Console.Clear();
 
-            Console.WriteLine($"You have {_score} points.\n");
+            DisplayPlayerInfo();
 
             Console.WriteLine("Menu Options:");
             Console.WriteLine("  1. Create New Goal");
@@ -54,23 +56,24 @@ public class GoalManager
 
             if (choiceInt == 1)
             {
-                Goal goal = GoalsType(); 
+                Goal goal = CreateGoal(); 
                 _goals.Add(goal);
             }
             else if (choiceInt == 2)
             {
-                ListGoalDetails();
+                if (_goals.Count > 0) ListGoalDetails();
+                else Console.WriteLine("You do not have any goals.");
 
                 Console.WriteLine("\nPress Enter button to continue");
                 Console.ReadLine();
             }
             else if (choiceInt == 3)
             {
-
+                SaveGoals();
             }
             else if (choiceInt == 4)
             {
-
+                LoadGoals();
             } 
             else if (choiceInt == 5)
             {
@@ -84,12 +87,156 @@ public class GoalManager
         }   
     }
 
+    public void LoadGoals()
+    {
+        _goals = new List<Goal>();
+
+        string filename = "";
+
+        while (true)
+        {
+            Console.Write("What is the filename to load goals from? ");
+            filename = Console.ReadLine().Trim();
+
+            if (filename != "") break;
+        }
+
+        string[] lines = File.ReadAllLines(filename);
+
+        int score = int.Parse(lines[0]);
+        _score = score;
+
+        string[] breakLine;
+        string goalName;
+        string isComplete;
+        string shortName;
+        string description;
+        string points;
+        string target = "";
+        string bonus = "";
+        int timesDone = 0;
+
+
+        foreach (string line in lines.Skip(1))
+        {
+            if (line.Contains("ChecklistGoal"))
+            {
+                breakLine = line.Split(",");
+                goalName = breakLine[0];
+                isComplete = breakLine[1];
+                shortName = breakLine[2];
+                description = breakLine[3];
+                points = breakLine[4];
+                target = breakLine[5];
+                bonus = breakLine[6];
+                timesDone = int.Parse(breakLine[7]);
+            }
+            else
+            {
+                breakLine = line.Split(",");
+                goalName = breakLine[0];
+                isComplete = breakLine[1];
+                shortName = breakLine[2];
+                description = breakLine[3];
+                points = breakLine[4];
+            }
+
+            int pointsInt = int.Parse(points);
+            int targetInt = 0;
+            int bonusInt = 0;
+
+            if (goalName == "ChecklistGoal")
+            {
+                targetInt = int.Parse(target);
+                bonusInt = int.Parse(bonus);
+            }
+
+            Goal returnValue = (goalName == "SimpleGoal") 
+                        ? new SimpleGoal(shortName, description, pointsInt) : (goalName == "EternalGoal")
+                        ? new EternalGoal(shortName, description, pointsInt): new ChecklistGoal(shortName, description, pointsInt, targetInt, bonusInt);
+
+            
+
+            if (goalName == "SimpleGoal") 
+            {
+                SimpleGoal simple = (SimpleGoal)returnValue;
+                simple.SetIsComplete(Boolean.Parse(isComplete));
+                simple.SetGoalName(goalName);
+                _goals.Add((Goal)simple);
+            }
+            else if (goalName == "EternalGoal") 
+            {
+                EternalGoal eternal = (EternalGoal)returnValue;
+                eternal.SetIsComplete(Boolean.Parse(isComplete));
+                eternal.SetGoalName(goalName);
+                _goals.Add((Goal)eternal);
+            }
+
+            else if (goalName == "ChecklistGoal") 
+            {
+                ChecklistGoal check = (ChecklistGoal)returnValue;
+                check.SetIsComplete(Boolean.Parse(isComplete));
+                check.SetTarget(targetInt);
+                check.SetBonus(bonusInt);
+                check.SetGoalName(goalName);
+                check.SetTimesDone(timesDone);
+                _goals.Add((Goal)check);
+            }
+        }
+    }
+
+    public void SaveGoals()
+    {
+        string filename = "";
+               
+        while (true)
+        {
+            Console.Write("What is the filename to save the goal? ");
+            filename = Console.ReadLine().Trim();
+
+            if (filename != "") break;
+        }
+
+        using (StreamWriter outputFile = new StreamWriter(filename))
+        {
+            outputFile.WriteLine(_score); 
+
+            foreach (Goal goal in _goals)
+            {
+                string goalName = goal.GetGoalName();
+
+                string write = $"{goalName},{goal.IsComplete()},{goal.GetShortName()},{goal.GetDescription()},{goal.GetPoints()}";
+
+                if (goalName == "ChecklistGoal")
+                {
+                    ChecklistGoal checkGoal = (ChecklistGoal)goal;
+                    write += $",{checkGoal.GetTarget()},{checkGoal.GetBonus()},{checkGoal.GetTimesDone()}";
+                }
+
+                outputFile.WriteLine(write);
+            }    
+        }
+    }
+
+    public void DisplayPlayerInfo()
+    {
+        Console.WriteLine($"You have {_score} points.\n");
+    }
+
+    private void ListGoalsNotCompleted()
+    {
+        _notCompleted = _goals.Where((goal) => goal.IsComplete() == false).ToList();
+    }
+
     public void ListGoalNames()
     {
+        
+        ListGoalsNotCompleted();
+
         Console.WriteLine("The goals are:");
-        for (int i = 0; i < _goals.Count; i++)
+        for (int i = 0; i < _notCompleted.Count; i++)
         {
-            Console.WriteLine($"  {i + 1}. {_goals[i].GetShortName()}");
+            Console.WriteLine($"  {i + 1}. {_notCompleted[i].GetShortName()}");
         }
     }
 
@@ -97,23 +244,35 @@ public class GoalManager
     {
         ListGoalNames();
 
-        Console.Write("Which goal did you accomplish? ");
-        string completed = Console.ReadLine();
-        bool completedBool = int.TryParse(completed, out _);
-
-        while (!completedBool || int.Parse(completed) > _goals.Count)
+        if (_notCompleted.Count > 0)
         {
-            Console.WriteLine("\nYour choice is not in the options.\n");
-
             Console.Write("Which goal did you accomplish? ");
-            completed = Console.ReadLine();
-            completedBool = int.TryParse(completed, out _);
+            string completed = Console.ReadLine();
+            bool completedBool = int.TryParse(completed, out _);
+
+            while (!completedBool || int.Parse(completed) > _notCompleted.Count)
+            {
+                Console.WriteLine("\nYour choice is not in the options.\n");
+
+                Console.Write("Which goal did you accomplish? ");
+                completed = Console.ReadLine();
+                completedBool = int.TryParse(completed, out _);
+            }
+
+            int completedInt = int.Parse(completed);
+
+            int indexGoal = _goals.IndexOf(_notCompleted[completedInt - 1]);
+
+            _goals[indexGoal].RecordEvent();
+            _score += _goals[indexGoal].UpdateScore();
         }
-
-        int completedInt = int.Parse(completed);
-
-        _goals[completedInt - 1].RecordEvent();
-
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("\nYou do not currently have any unaccomplished goals.\n");
+            Console.WriteLine("Press Enter to continue ");
+            Console.ReadLine();
+        }   
     }
 
     public void ListGoalDetails()
@@ -124,7 +283,7 @@ public class GoalManager
         }
     }
 
-    private Goal GoalsType()
+    private Goal CreateGoal()
     {
             Console.WriteLine("The types of Goals are: ");
             Console.WriteLine("  1. Simple Goal");

@@ -7,12 +7,14 @@ public class Goal
     private string _shortName;
     private string _description;
     private int _points;
+    private string _goalName;
 
     public Goal(string name, string description, int points)
     {
         _shortName = name;
         _description = description;
         _points = points;
+        _goalName = "";
     }
 
     public string GetShortName()
@@ -28,6 +30,11 @@ public class Goal
     public int GetPoints()
     {
         return _points;
+    }
+
+    public virtual int UpdateScore()
+    {
+        return GetPoints();
     }
 
     public virtual void RecordEvent()
@@ -48,6 +55,16 @@ public class Goal
     public virtual string GetStringRepresentation()
     {
         return "";
+    }
+
+    public string GetGoalName()
+    {
+        return _goalName;
+    }
+
+    public void SetGoalName(string goalName)
+    {
+        _goalName = goalName;
     }
 
 }

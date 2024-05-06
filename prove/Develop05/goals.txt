@@ -1,0 +1,4 @@
+142
+SimpleGoal,True,Pray,Pray,10
+EternalGoal,False,Read Bible,Read Bible,1
+ChecklistGoal,True,Worship,Worship,15,2,100,2

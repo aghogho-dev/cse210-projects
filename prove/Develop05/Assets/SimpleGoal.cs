@@ -9,6 +9,7 @@ public class SimpleGoal : Goal
     public SimpleGoal(string name, string description, int points) : base(name, description, points)
     {
         _isComplete = false;
+        base.SetGoalName("SimpleGoal");
     }
 
     public override void RecordEvent()
@@ -19,6 +20,11 @@ public class SimpleGoal : Goal
     public override bool IsComplete()
     {
         return _isComplete;
+    }
+
+    public void SetIsComplete(bool isComplete)
+    {
+        _isComplete = isComplete;
     }
 
     public override string GetDetailsString()

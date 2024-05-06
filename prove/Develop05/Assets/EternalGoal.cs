@@ -9,6 +9,7 @@ public class EternalGoal : Goal
     public EternalGoal(string name, string description, int points) : base(name, description, points)
     {
         _isComplete = false;
+        base.SetGoalName("EternalGoal");
     }
 
     public override void RecordEvent()
@@ -25,5 +26,11 @@ public class EternalGoal : Goal
     {
         return _isComplete;
     }
+
+    public void SetIsComplete(bool isComplete)
+    {
+        _isComplete = isComplete;
+    }
+
 
 }
