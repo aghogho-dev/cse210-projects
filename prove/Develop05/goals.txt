@@ -1,4 +1,0 @@
-125
-SimpleGoal,True,Go to school,School,5
-EternalGoal,False,Read Bible,Bible,1
-ChecklistGoal,True,Pray,Pray Daily,10,2,100,2
