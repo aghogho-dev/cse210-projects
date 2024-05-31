@@ -34,7 +34,7 @@ public class Order
 
     public string ShippingLabel()
     {
-        return $"{_customer.GetName()}\n{_customer.GetAddress().AddressString()}";
+        return $"\n\t{_customer.GetName()}\n{_customer.GetAddress().AddressString()}";
     }
 
     private double ShippingCost()
