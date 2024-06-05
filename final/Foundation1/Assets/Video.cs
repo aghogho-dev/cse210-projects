@@ -2,7 +2,8 @@ using System;
 
 namespace Foundation1.Assets;
 
-class Video {
+class Video 
+{
     private string _author = "";
     private string _title = "";
     private int _length = 0;
@@ -52,6 +53,11 @@ class Video {
         return _comments.ElementAt(index);
     }
 
+    public int GetNumberComment()
+    {
+        return _comments.Count;
+    }
+
     public void DisplayComments()
     {
         foreach (Comment comment in _comments)
@@ -65,7 +71,7 @@ class Video {
         Console.WriteLine($"Title: {_title}");
         Console.WriteLine($"Author: {_author}");
         Console.WriteLine($"Length: {_length}");
-        Console.WriteLine($"Number of comments: {_comments.Count}");
+        Console.WriteLine($"Number of comments: {GetNumberComment()}");
     }
 
 }
